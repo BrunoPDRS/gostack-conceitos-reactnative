@@ -22,12 +22,13 @@ export default function App() {
   }, []);
 
   async function handleLikeRepository(id) {
+    let getRepos = repos.map(repo => repo);
+    const repoIndex = repos.findIndex(repo => repo.id === id);
     await api.post(`/repositories/${id}/like`);
 
-    await api.get('/repositories').then(response => {
-      setRepos(response.data);
-    });
-    
+    getRepos[repoIndex].likes++;
+
+    setRepos(getRepos);
   }
 
   return (
@@ -43,7 +44,7 @@ export default function App() {
 
             <View style={styles.techsContainer}>
               {repo.techs.map(tech => 
-                <Text style={styles.tech}>
+                <Text style={styles.tech} key={tech}>
                   {tech}
                 </Text>
               )}
